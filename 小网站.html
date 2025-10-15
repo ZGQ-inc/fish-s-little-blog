@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的個人空間</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft JhengHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .social-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            width: 200px;
+            text-align: center;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .social-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .social-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .bilibili-icon {
+            color: #FB7299; /* 哔哩哔哩粉色 */
+            font-size: 3.5rem;
+        }
+        
+        .social-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .social-card a {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        
+        .social-card a:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .qrcode {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #333;
+        }
+        
+        .about-section {
+            margin-top: 100px;
+            padding: 60px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s, transform 1s;
+        }
+        
+        .about-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .about-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .about-content {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .gallery-section {
+            margin-top: 80px;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+        }
+        
+        .gallery-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            padding: 40px 20px;
+            margin: 20px auto;
+            max-width: 500px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .upload-area:hover {
+            border-color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .upload-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 15px;
+        }
+        
+        .upload-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        #file-input {
+            display: none;
+        }
+        
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.03);
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .image-placeholder {
+            width: 100%;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 1rem;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .gallery-item:hover .delete-btn {
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .image-gallery {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>歡迎來到我的空間</h1>
+            <p class="subtitle">探索我的數位世界</p>
+            
+            <div class="social-links">
+                <div class="social-card">
+                    <div class="social-icon">🐧</div>
+                    <h3>QQ聯繫</h3>
+                    <a href="https://qm.qq.com/q/Z6Ht60MLCg" target="_blank">點擊聯繫</a>
+                </div>
+                
+                <div class="social-card">
+                    <div class="social-icon">💬</div>
+                    <h3>微信二維碼</h3>
+                    <div class="qrcode">微信二維碼區域</div>
+                    <p>掃碼添加好友</p>
+                </div>
+                
+                <div class="social-card">
+                    <div class="social-icon bilibili-icon">📺</div>
+                    <h3>粉紅小電視</h3>
+                    <a href="https://b23.tv/UCwKiOx" target="_blank">訪問主頁</a>
+                </div>
+                
+                <div class="social-card">
+                    <div class="social-icon">🐦</div>
+                    <h3>Twitter</h3>
+                    <a href="https://x.com/fish1072297057?t=FDziPTSTyBnhpDpejQXaXg&s=09" target="_blank">跳轉到Twitter</a>
+                </div>
+            </div>
+        </header>
+        
+        <section class="about-section" id="about">
+            <h2>關於我</h2>
+            <div class="about-content">
+                <p>這裡可以寫下您的個人介紹、興趣愛好、專業技能等內容。當用戶向下滾動頁面時，這部分內容會逐漸浮現出來。</p>
+                <p>您可以自由編輯這段文字，添加更多關於您自己的信息，讓訪問者更好地了解您。</p>
+                <p>例如：我是一名前端開發者，熱愛編程和設計，喜歡探索新技術，創造美觀實用的網頁應用。</p>
+            </div>
+        </section>
+        
+        <section class="gallery-section">
+            <h2>我的相冊</h2>
+            <p style="text-align: center; margin-bottom: 20px;">上傳並展示您的圖片</p>
+            
+            <div class="upload-area" id="upload-area">
+                <div class="upload-icon">📁</div>
+                <p>點擊此處或拖放圖片到此處上傳</p>
+                <p class="upload-hint">支援 JPG、PNG 格式</p>
+                <label for="file-input" class="upload-btn">選擇圖片</label>
+            </div>
+            
+            <input type="file" id="file-input" accept="image/*" multiple>
+            
+            <div class="image-gallery" id="image-gallery">
+                <!-- 上傳的圖片將在這裡顯示 -->
+                <div class="image-placeholder">
+                    上傳的圖片將顯示在這裡
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 滾動時顯示關於部分
+        window.addEventListener('scroll', function() {
+            const aboutSection = document.getElementById('about');
+            const sectionPosition = aboutSection.getBoundingClientRect().top;
+            const screenPosition = window.innerHeight / 1.3;
+            
+            if(sectionPosition < screenPosition) {
+                aboutSection.classList.add('visible');
+            }
+        });
+        
+        // 獲取DOM元素
+        const fileInput = document.getElementById('file-input');
+        const uploadArea = document.getElementById('upload-area');
+        const imageGallery = document.getElementById('image-gallery');
+        
+        // 點擊上傳區域觸發文件選擇
+        uploadArea.addEventListener('click', function() {
+            fileInput.click();
+        });
+        
+        // 拖放功能
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.8)';
+            uploadArea.style.background = 'rgba(255, 255, 255, 0.1)';
+        });
+        
+        uploadArea.addEventListener('dragleave', function() {
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+            uploadArea.style.background = 'transparent';
+        });
+        
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+            uploadArea.style.background = 'transparent';
+            
+            if (e.dataTransfer.files.length) {
+                handleImageUpload(e.dataTransfer.files);
+            }
+        });
+        
+        // 文件選擇變化時處理
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length) {
+                handleImageUpload(e.target.files);
+            }
+        });
+        
+        // 處理圖片上傳
+        function handleImageUpload(files) {
+            // 移除佔位符（如果有）
+            const placeholder = imageGallery.querySelector('.image-placeholder');
+            if (placeholder) {
+                placeholder.remove();
+            }
+            
+            // 處理每個文件
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // 檢查文件類型
+                if (!file.type.match('image.*')) {
+                    alert('請上傳圖片文件！');
+                    continue;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    const imageUrl = event.target.result;
+                    
+                    // 添加到圖片庫
+                    addImageToGallery(imageUrl, file.name);
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // 添加圖片到展示區域
+        function addImageToGallery(imageUrl, fileName) {
+            // 創建圖片元素
+            const galleryItem = document.createElement('div');
+            galleryItem.className = 'gallery-item';
+            
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.alt = fileName;
+            img.className = 'gallery-image';
+            
+            // 創建刪除按鈕
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.innerHTML = '×';
+            deleteBtn.title = '刪除圖片';
+            
+            // 刪除圖片功能
+            deleteBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                galleryItem.remove();
+                
+                // 如果沒有圖片了，顯示佔位符
+                if (imageGallery.children.length === 0) {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'image-placeholder';
+                    placeholder.textContent = '上傳的圖片將顯示在這裡';
+                    imageGallery.appendChild(placeholder);
+                }
+            });
+            
+            galleryItem.appendChild(img);
+            galleryItem.appendChild(deleteBtn);
+            imageGallery.appendChild(galleryItem);
+        }
+        
+        // 初始化頁面加載後顯示關於部分（如果已經在視圖中）
+        window.dispatchEvent(new Event('scroll'));
+    </script>
+</body>
+</html>
